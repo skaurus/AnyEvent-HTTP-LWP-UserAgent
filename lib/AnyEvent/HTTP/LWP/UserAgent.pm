@@ -197,6 +197,8 @@ sub simple_request_async {
         # to read RFCs more carefully.
         my $headers = HTTP::Headers->new;
         while (my ($header, $value) = each %$h) {
+            # some pages like http://www.games.com/recipes/recepty-domashnego-ketchupa have empty headers and cause crash
+            next unless ($header);
             # In previous versions it was a place where heavily used
             # Coro stack (if Coro used) when you had pseudo-header URL
             # and URL was really big.
