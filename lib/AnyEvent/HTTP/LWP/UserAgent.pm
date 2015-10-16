@@ -202,11 +202,13 @@ sub simple_request_async {
             # and URL was really big.
             # Now it's not such a big problem, we delete URL pseudo-header
             # and haven't sudden gigantous headers (I hope).
-            my @v = $value =~ /^([^ ].*?[^ ],)*([^ ].*?[^ ])$/;
-            @v = grep { defined($_) } @v;
-            if (scalar(@v) > 1) {
-                @v = map { s/,$//; $_ } @v;
-                $value = \@v;
+            unless ($header eq 'location') { # in case of Location header this is useless and dangerous
+                my @v = $value =~ /^([^ ].*?[^ ],)*([^ ].*?[^ ])$/;
+                @v = grep { defined($_) } @v;
+                if (scalar(@v) > 1) {
+                    @v = map { s/,$//; $_ } @v;
+                    $value = \@v;
+                }
             }
             $headers->header($header => $value);
         }
